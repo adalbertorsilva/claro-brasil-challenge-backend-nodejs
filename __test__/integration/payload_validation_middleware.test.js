@@ -42,4 +42,16 @@ describe('PAYLOAD VALIDATION MIDDLEWARE INTEGRATION TEST', () => {
       })
     })
   })
+
+  describe('UPDATE DEVICE NAME', () => {
+    describe('when a payload is sent without an device_name field', () => {
+      it('Should return a 422 status and an error message', async () => {
+        const payload = {}
+
+        const response = await request(app).put('/devices/123').send(payload)
+        expect(response.status).toBe(422)
+        expect(response.body.message).toBe('The attribute device_name is required')
+      })
+    })
+  })
 })

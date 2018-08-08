@@ -8,7 +8,8 @@ module.exports = (sequelize) => {
       return super.init({
         user_id: DataTypes.INTEGER,
         device_name: DataTypes.STRING,
-        device_model: DataTypes.STRING
+        device_model: DataTypes.STRING,
+        traded: DataTypes.BOOLEAN
       }, {
         sequelize,
         underscored: true

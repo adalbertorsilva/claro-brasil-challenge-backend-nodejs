@@ -18,14 +18,18 @@ describe('CHANGE DEVICE MIDDLEWARE UNIT TEST', () => {
         created_at: moment(new Date()).subtract(20, 'days').toDate()
       }
 
-      const persistedDevices = [{...newDevice}, {...newDevice}, {...newDevice}]
+      const persistedDevices = [{...newDevice}, {...newDevice}, {...newDevice, traded: true}]
       sandbox.stub(Device, 'findAll').returns(persistedDevices)
+
+      let middlewareError
 
       try {
         await changeDeviceMiddleware.checkDevicesChange(newDevice)
       } catch (error) {
-        expect(error.message).toBe(`Devices can't be changed at the moment`)
+        middlewareError = error
       }
+
+      expect(middlewareError.message).toBe(`Devices can't be changed at the moment`)
     })
   })
 })

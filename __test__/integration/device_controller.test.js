@@ -1,5 +1,6 @@
 const request = require('supertest')
 const app = require('../../config/server')
+const {Device} = require('../../models')
 
 describe('DEVICE CONTROLLER INTEGRATION TEST', () => {
   describe('CREATE DEVICE', () => {
@@ -13,6 +14,30 @@ describe('DEVICE CONTROLLER INTEGRATION TEST', () => {
 
         const response = await request(app).post('/devices').send(payload)
         expect(response.status).toBe(201)
+      })
+    })
+  })
+
+  describe('UPDATE DEVICE NAME', () => {
+    describe('When post request is made with a complete payload', () => {
+      it('Should return a 200 status', async () => {
+        const creationPayload = {
+          user_id: 111,
+          device_name: 'test iphone',
+          device_model: 'apple iphone'
+        }
+
+        const updatePayload = {
+          device_name: 'updated test iphone'
+        }
+
+        const createdDevice = await Device.create(creationPayload)
+        const response = await request(app).put(`/devices/${createdDevice.id}`).send(updatePayload)
+
+        const loadedDevice = await Device.find({where: {id: createdDevice.id}})
+
+        expect(response.status).toBe(200)
+        expect(loadedDevice.device_name).toBe(updatePayload.device_name)
       })
     })
   })
