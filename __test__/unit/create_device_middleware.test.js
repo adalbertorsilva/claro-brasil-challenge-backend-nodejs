@@ -38,7 +38,7 @@ describe('CREATE DEVICE MIDDLEWARE UNIT TEST', () => {
         created_at: moment(new Date()).subtract(20, 'days').toDate()
       }
 
-      const persistedDevices = [{...newDevice}, {...newDevice}, {...newDevice}]
+      const persistedDevices = [{...newDevice}, {...newDevice}, {...newDevice, traded: true}]
       sandbox.stub(Device, 'findAll').returns(persistedDevices)
 
       try {
