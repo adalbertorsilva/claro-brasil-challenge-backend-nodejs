@@ -6,7 +6,7 @@ describe('DEVICE INTEGRATION TEST', () => {
     it('should return an object with an id, created_at and updated_at attributes besides the payload values sent', async () => {
       const payload = {
         user_id: 123,
-        device_name: 'Iphone de teste',
+        device_name: 'test iphone',
         device_model: 'apple iphone'
       }
 
@@ -25,7 +25,7 @@ describe('DEVICE INTEGRATION TEST', () => {
     it('should throw a DeviceLimitExcedeedError', async () => {
       const payload = {
         user_id: 123,
-        device_name: 'Iphone de teste',
+        device_name: 'test iphone',
         device_model: 'apple iphone'
       }
 
@@ -34,6 +34,30 @@ describe('DEVICE INTEGRATION TEST', () => {
       } catch (error) {
         expect(error.message).toBe(`You already have ${process.env.DEVICE_LIMIT} registered devices`)
       }
+    })
+  })
+
+  describe(`when a device name is updated`, () => {
+    it('should return an object with the same values passed on the update payload', async () => {
+      const createPayload = {
+        user_id: 321,
+        device_name: 'test iphone',
+        device_model: 'apple iphone'
+      }
+
+      const updatePayload = {
+        device_name: 'test iphone updated'
+      }
+
+      const persistedDevice = await Device.create(createPayload)
+      const updatedDevice = await Device.update({
+        device_name: updatePayload.device_name
+      },
+      {where: { id: persistedDevice.id },
+        returning: true,
+        plain: true})
+
+      expect(updatedDevice[1]).toHaveProperty('device_name', updatePayload.device_name)
     })
   })
 })

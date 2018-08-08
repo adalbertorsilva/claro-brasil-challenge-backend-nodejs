@@ -11,7 +11,7 @@ describe('DEVICE UNIT TEST', () => {
     it('should throw a DeviceLimitExcedeedError', async () => {
       const payload = {
         user_id: 123,
-        device_name: 'Iphone de teste',
+        device_name: 'test iphone',
         device_model: 'apple iphone'
       }
 
