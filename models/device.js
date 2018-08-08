@@ -1,8 +1,6 @@
 'use strict'
 
 const {Model, DataTypes} = require('sequelize')
-const DeviceLimitExcedeedError = require('../errors/device_limit_exceeded_error')
-require('dotenv').config()
 
 module.exports = (sequelize) => {
   class Device extends Model {
@@ -13,19 +11,8 @@ module.exports = (sequelize) => {
         device_model: DataTypes.STRING
       }, {
         sequelize,
-        underscored: true,
-        hooks: {
-          beforeCreate: Device.beforeCreate
-        }
+        underscored: true
       })
-    }
-
-    static async beforeCreate (model) {
-      const devices = await Device.findAll({where: {user_id: model.user_id}})
-
-      if (devices.length === parseInt(process.env.DEVICE_LIMIT)) {
-        throw new DeviceLimitExcedeedError()
-      }
     }
   }
 
