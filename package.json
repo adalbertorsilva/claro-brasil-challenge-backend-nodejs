@@ -4,6 +4,7 @@
   "description": "Desafio que consiste na criação de uma api para cadastro de manutenção de aparelhos por usuário",
   "main": "index.js",
   "scripts": {
+    "start": "node index.js",
     "test": "NODE_ENV=test npx sequelize db:migrate; jest --forceExit",
     "lint": "npx eslint __test__/ models/",
     "precommit": "npm run lint"
@@ -27,6 +28,7 @@
     "cors": "^2.8.4",
     "dotenv": "^6.0.0",
     "express": "^4.16.3",
+    "joi": "^13.5.2",
     "pg": "^7.4.3",
     "pg-hstore": "^2.3.2",
     "require-all": "^3.0.0",
