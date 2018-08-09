@@ -18,13 +18,16 @@ describe('CREATE DEVICE MIDDLEWARE UNIT TEST', () => {
         created_at: moment(new Date()).subtract(60, 'days').toDate()
       }
 
+      const req = {}
+      req.body = newDevice
+
       const persistedDevices = [{...newDevice}, {...newDevice}, {...newDevice}]
       sandbox.stub(Device, 'findAll').returns(persistedDevices)
 
       try {
-        await createDeviceMiddleware.checkDevicesLimit(newDevice)
+        await createDeviceMiddleware.checkDevicesLimit(req)
       } catch (error) {
-        expect(error.message).toBe(`You already have ${process.env.DEVICE_LIMIT} registered devices but can change a device`)
+        expect(error.message).toBe(`You already have ${process.env.DEVICE_MAXIMUM_LIMIT} registered devices but can change a device`)
       }
     })
   })
@@ -38,14 +41,21 @@ describe('CREATE DEVICE MIDDLEWARE UNIT TEST', () => {
         created_at: moment(new Date()).subtract(20, 'days').toDate()
       }
 
+      const req = {}
+      req.body = newDevice
+
       const persistedDevices = [{...newDevice}, {...newDevice}, {...newDevice, traded: true}]
       sandbox.stub(Device, 'findAll').returns(persistedDevices)
 
+      let middlewareError
+
       try {
-        await createDeviceMiddleware.checkDevicesLimit(newDevice)
+        await createDeviceMiddleware.checkDevicesLimit(req)
       } catch (error) {
-        expect(error.message).toBe(`You already have ${process.env.DEVICE_LIMIT} registered devices and can't change a device`)
+        middlewareError = error
       }
+
+      expect(middlewareError.message).toBe(`You already have ${process.env.DEVICE_MAXIMUM_LIMIT} registered devices and can't change a device`)
     })
   })
 })

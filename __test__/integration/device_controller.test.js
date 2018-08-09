@@ -64,7 +64,25 @@ describe('DEVICE CONTROLLER INTEGRATION TEST', () => {
         expect(response.status).toBe(200)
         expect(loadedDevice).toBeNull()
         expect(response.body).toHaveProperty('id')
-        // expect(loadedDevice.device_name).toBe(updatePayload.device_name)
+      })
+    })
+  })
+
+  describe('REMOVE DEVICE', () => {
+    describe('When delete request is made', () => {
+      it('Should return a 200 status', async () => {
+        const creationPayload = {
+          user_id: 333333333,
+          device_name: 'test iphone',
+          device_model: 'apple iphone'
+        }
+
+        const createdDevice = await Device.create(creationPayload)
+        const response = await request(app).delete(`/devices/${createdDevice.id}`)
+
+        const loadedDevice = await Device.find({where: {id: createdDevice.id}})
+        expect(response.status).toBe(200)
+        expect(loadedDevice).toBeNull()
       })
     })
   })

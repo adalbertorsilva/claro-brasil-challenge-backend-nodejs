@@ -17,7 +17,7 @@ describe('CREATE DEVICE MIDDLEWARE INTEGRATION TEST', () => {
 
         const response = await request(app).post('/devices').send(payload)
         expect(response.status).toBe(403)
-        expect(response.body).toHaveProperty('message', `You already have ${process.env.DEVICE_LIMIT} registered devices but can change a device`)
+        expect(response.body).toHaveProperty('message', `You already have ${process.env.DEVICE_MAXIMUM_LIMIT} registered devices but can change a device`)
       })
     })
 
@@ -34,7 +34,7 @@ describe('CREATE DEVICE MIDDLEWARE INTEGRATION TEST', () => {
 
         const response = await request(app).post('/devices').send(payload)
         expect(response.status).toBe(403)
-        expect(response.body).toHaveProperty('message', `You already have ${process.env.DEVICE_LIMIT} registered devices and can't change a device`)
+        expect(response.body).toHaveProperty('message', `You already have ${process.env.DEVICE_MAXIMUM_LIMIT} registered devices and can't change a device`)
         expect(response.body).toHaveProperty('nextChangeAvaliable')
         expect(moment(response.body.nextChangeAvaliable).toDate().toDateString()).toBe(moment(devices[0].created_at, 'DD-MM-YYYY').add(30, 'days').toDate().toDateString())
       })

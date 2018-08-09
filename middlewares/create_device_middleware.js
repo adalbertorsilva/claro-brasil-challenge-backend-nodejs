@@ -16,11 +16,11 @@ class CreateDeviceMiddleware extends DeviceBaseMiddleware {
     await this.executeValidation(req, res, next, this.checkDevicesLimit)
   }
 
-  async checkDevicesLimit (newDevice) {
-    const devices = await Device.findAll({where: {user_id: newDevice.user_id}})
+  async checkDevicesLimit (req) {
+    const devices = await Device.findAll({where: {user_id: req.body.user_id}})
     this.changeDeviceUtils = new ChangeDeviceUtils(devices)
 
-    if (devices.length === parseInt(process.env.DEVICE_LIMIT)) {
+    if (devices.length === parseInt(process.env.DEVICE_MAXIMUM_LIMIT)) {
       throw new DeviceLimitExcedeedError(this.changeDeviceUtils.isChangeable())
     }
   }

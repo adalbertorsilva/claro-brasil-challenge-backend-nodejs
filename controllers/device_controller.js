@@ -22,6 +22,11 @@ class DeviceController {
 
     res.status(200).send(persistedDevice)
   }
+
+  async delete (req, res) {
+    await Device.destroy({where: {id: req.params.id}})
+    res.status(200).send()
+  }
 }
 
 module.exports = new DeviceController()

@@ -16,8 +16,8 @@ class ChangeDeviceMiddleware extends DeviceBaseMiddleware {
     await this.executeValidation(req, res, next, this.checkDevicesChange)
   }
 
-  async checkDevicesChange (newDevice) {
-    this.changeDeviceUtils = new ChangeDeviceUtils(await Device.findAll({where: {user_id: newDevice.user_id}}))
+  async checkDevicesChange (req) {
+    this.changeDeviceUtils = new ChangeDeviceUtils(await Device.findAll({where: {user_id: req.body.user_id}}))
 
     if (!this.changeDeviceUtils.isChangeable()) {
       throw new DeviceChangeError()

@@ -7,7 +7,7 @@ class DeviceBaseMiddleware {
 
   async executeValidation (req, res, next, valitdationFunction) {
     try {
-      await valitdationFunction(req.body)
+      await valitdationFunction(req)
       next()
     } catch (error) {
       res.status(error.status).send(this.createErrorResponseObject(error))
