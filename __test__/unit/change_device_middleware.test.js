@@ -2,7 +2,6 @@ const sandbox = require('sinon').createSandbox()
 const moment = require('moment')
 const { Device } = require('../../models')
 const { change_device_middleware: changeDeviceMiddleware } = require('../../middlewares')
-require('dotenv').config()
 
 afterEach(() => {
   sandbox.restore()

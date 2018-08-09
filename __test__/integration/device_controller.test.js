@@ -41,4 +41,31 @@ describe('DEVICE CONTROLLER INTEGRATION TEST', () => {
       })
     })
   })
+
+  describe('CHANGE DEVICE', () => {
+    describe('When post request is made with a complete payload', () => {
+      it('Should return a 200 status and an object', async () => {
+        const creationPayload = {
+          user_id: 333333333,
+          device_name: 'test iphone',
+          device_model: 'apple iphone'
+        }
+
+        const changePayload = {
+          user_id: 333333333,
+          device_name: 'test android',
+          device_model: 'google android'
+        }
+
+        const createdDevice = await Device.create(creationPayload)
+        const response = await request(app).post(`/devices/${createdDevice.id}`).send(changePayload)
+
+        const loadedDevice = await Device.find({where: {id: createdDevice.id}})
+        expect(response.status).toBe(200)
+        expect(loadedDevice).toBeNull()
+        expect(response.body).toHaveProperty('id')
+        // expect(loadedDevice.device_name).toBe(updatePayload.device_name)
+      })
+    })
+  })
 })

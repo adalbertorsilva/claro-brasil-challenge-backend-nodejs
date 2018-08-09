@@ -2,21 +2,18 @@ const autoBind = require('auto-bind')
 const { Device } = require('../models')
 const {device_limit_exceeded_error: DeviceLimitExcedeedError} = require('../errors')
 const ChangeDeviceUtils = require('../utils/change_devices_utils')
+const DeviceBaseMiddleware = require('./device_base_middleware')
 
 require('dotenv').config()
 
-class CreateDeviceMiddleware {
+class CreateDeviceMiddleware extends DeviceBaseMiddleware {
   constructor () {
+    super()
     autoBind(this)
   }
 
   async validateDevicesLimit (req, res, next) {
-    try {
-      await this.checkDevicesLimit(req.body)
-      next()
-    } catch (error) {
-      res.status(error.status).send(this.createErrorResponseObject(error))
-    }
+    await this.executeValidation(req, res, next, this.checkDevicesLimit)
   }
 
   async checkDevicesLimit (newDevice) {
@@ -26,16 +23,6 @@ class CreateDeviceMiddleware {
     if (devices.length === parseInt(process.env.DEVICE_LIMIT)) {
       throw new DeviceLimitExcedeedError(this.changeDeviceUtils.isChangeable())
     }
-  }
-
-  createErrorResponseObject (error) {
-    const responseObject = {message: error.message}
-
-    if (!this.changeDeviceUtils.isChangeable()) {
-      responseObject.nextChangeAvaliable = this.changeDeviceUtils.getNextAvaliableChangeDate()
-    }
-
-    return responseObject
   }
 }
 
